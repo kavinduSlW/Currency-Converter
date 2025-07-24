@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Currency Exchange Pro - Real-time Currency Converter</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-header">
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-exchange-alt"></i>
+        <span>Currency Exchange Pro</span>
+      </div>
+      <div class="live-indicator">
+        <div class="pulse"></div>
+        <span>Live Rates</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <div class="converter-card">
+      <div class="card-header">
+        <h1><i class="fas fa-coins"></i> Currency Converter</h1>
+        <p class="subtitle">Get real-time exchange rates for 170+ currencies</p>
+      </div>
+      
+      <div class="converter-body">
+        <div class="input-section">
+          <div class="currency-input-group">
+            <label for="from-currency">From</label>
+            <div class="input-wrapper">
+              <select id="from-currency" class="currency-select">
+                <option value="">Select currency...</option>
+              </select>
+              <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+          </div>
+
+          <div class="swap-container">
+            <button id="swap-btn" class="swap-btn" title="Swap currencies">
+              <i class="fas fa-exchange-alt"></i>
+            </button>
+          </div>
+
+          <div class="currency-input-group">
+            <label for="to-currency">To</label>
+            <div class="input-wrapper">
+              <select id="to-currency" class="currency-select">
+                <option value="">Select currency...</option>
+              </select>
+              <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="amount-section">
+          <label for="amount">Amount</label>
+          <div class="amount-input-wrapper">
+            <input type="number" id="amount" placeholder="Enter amount" step="0.01" min="0" />
+            <span class="currency-symbol" id="from-symbol">$</span>
+          </div>
+        </div>
+
+        <button id="convert-btn" class="convert-btn">
+          <span class="btn-text">Convert Currency</span>
+          <i class="fas fa-arrow-right btn-icon"></i>
+          <div class="btn-loader">
+            <i class="fas fa-spinner fa-spin"></i>
+          </div>
+        </button>
+
+        <div class="result-section">
+          <div class="result" id="result">
+            <div class="result-placeholder">
+              <i class="fas fa-calculator"></i>
+              <p>Enter an amount to see the conversion</p>
+            </div>
+          </div>
+          <div class="exchange-rate" id="exchange-rate"></div>
+          <div class="last-updated" id="last-updated"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-bolt"></i>
+        <h3>Real-time Rates</h3>
+        <p>Live exchange rates updated every minute</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-globe"></i>
+        <h3>170+ Currencies</h3>
+        <p>Support for all major world currencies</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-chart-line"></i>
+        <h3>Accurate Data</h3>
+        <p>Powered by reliable financial APIs</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>&copy; 2025 Currency Exchange Pro. All rights reserved.</p>
+    <p class="disclaimer">Exchange rates are for informational purposes only and may not reflect actual trading rates.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

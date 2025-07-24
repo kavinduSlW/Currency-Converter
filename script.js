@@ -11,6 +11,7 @@ const exchangeRateDiv = document.getElementById('exchange-rate');
 const lastUpdatedDiv = document.getElementById('last-updated');
 const swapBtn = document.getElementById('swap-btn');
 const fromSymbol = document.getElementById('from-symbol');
+const themeToggle = document.getElementById('theme-toggle');
 
 // Currency symbols mapping for display - comprehensive list
 const currencySymbols = {
@@ -57,6 +58,7 @@ let lastUpdateTime = null;
 window.addEventListener('DOMContentLoaded', initializeApp);
 
 function initializeApp() {
+  initializeTheme();
   loadCurrencies();
   setupEventListeners();
   setDefaultCurrencies();
@@ -77,6 +79,9 @@ function setupEventListeners() {
   
   // Swap currencies
   swapBtn.addEventListener('click', swapCurrencies);
+  
+  // Theme toggle
+  themeToggle.addEventListener('click', toggleTheme);
   
   // Update currency symbol when from currency changes
   fromCurrency.addEventListener('change', updateCurrencySymbol);
@@ -160,6 +165,70 @@ function setupMobileOptimizations() {
     swapBtn.addEventListener('click', () => {
       navigator.vibrate(30); // Shorter vibration for swap
     });
+    
+    // Theme toggle haptic feedback
+    themeToggle.addEventListener('click', () => {
+      navigator.vibrate(25); // Light vibration for theme switch
+    });
+  }
+}
+
+// Theme Management Functions
+function initializeTheme() {
+  // Check for saved theme preference - default to light mode
+  const savedTheme = localStorage.getItem('theme');
+  
+  if (savedTheme) {
+    // Use saved preference if user has explicitly chosen a theme
+    setTheme(savedTheme);
+  } else {
+    // Always default to light mode on first visit
+    setTheme('light');
+  }
+  
+  // Listen for system theme changes only if user hasn't set a preference
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    const userHasSetPreference = localStorage.getItem('theme');
+    if (!userHasSetPreference) {
+      // Only follow system preference if user hasn't manually chosen a theme
+      setTheme(e.matches ? 'dark' : 'light');
+    }
+  });
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  
+  // Add transition class to prevent jarring transitions
+  document.body.classList.add('theme-switching');
+  
+  setTheme(newTheme);
+  localStorage.setItem('theme', newTheme);
+  
+  // Remove transition class after animation
+  setTimeout(() => {
+    document.body.classList.remove('theme-switching');
+  }, 200);
+}
+
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  
+  // Update theme toggle icon
+  const themeIcon = themeToggle.querySelector('.theme-icon');
+  if (theme === 'dark') {
+    themeIcon.className = 'fas fa-sun theme-icon';
+    themeToggle.title = 'Switch to light mode';
+  } else {
+    themeIcon.className = 'fas fa-moon theme-icon';
+    themeToggle.title = 'Switch to dark mode';
+  }
+  
+  // Update meta theme-color for mobile browsers
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  if (metaThemeColor) {
+    metaThemeColor.setAttribute('content', theme === 'dark' ? '#1e293b' : '#2563eb');
   }
 }
 

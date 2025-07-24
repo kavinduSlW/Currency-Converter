@@ -70,6 +70,7 @@ function setupEventListeners() {
   // Enter key on amount input
   amountInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleConversion();
     }
   });
@@ -90,6 +91,76 @@ function setupEventListeners() {
       }
     }, 500);
   });
+  
+  // Mobile-specific optimizations
+  if (isMobileDevice()) {
+    setupMobileOptimizations();
+  }
+  
+  // Handle visibility change for mobile background/foreground
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && currencyCache) {
+      // Refresh data when app comes back to foreground
+      const timeSinceLastUpdate = Date.now() - (lastUpdateTime?.getTime() || 0);
+      if (timeSinceLastUpdate > 5 * 60 * 1000) { // 5 minutes
+        loadCurrencies();
+      }
+    }
+  });
+}
+
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+         (window.innerWidth <= 768 && window.innerHeight <= 1024);
+}
+
+function setupMobileOptimizations() {
+  // Prevent zoom on input focus for iOS
+  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    const inputs = document.querySelectorAll('input, select');
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        document.querySelector('meta[name=viewport]').setAttribute(
+          'content', 
+          'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+        );
+      });
+      
+      input.addEventListener('blur', () => {
+        document.querySelector('meta[name=viewport]').setAttribute(
+          'content', 
+          'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes'
+        );
+      });
+    });
+  }
+  
+  // Add touch feedback for buttons
+  const touchElements = document.querySelectorAll('button, .currency-select');
+  touchElements.forEach(element => {
+    element.addEventListener('touchstart', function() {
+      this.style.transform = 'scale(0.98)';
+    });
+    
+    element.addEventListener('touchend', function() {
+      this.style.transform = '';
+    });
+  });
+  
+  // Optimize for mobile input
+  amountInput.setAttribute('inputmode', 'decimal');
+  amountInput.setAttribute('pattern', '[0-9]*\\.?[0-9]*');
+  
+  // Add haptic feedback for supported devices
+  if ('vibrate' in navigator) {
+    convertBtn.addEventListener('click', () => {
+      navigator.vibrate(50); // Short vibration feedback
+    });
+    
+    swapBtn.addEventListener('click', () => {
+      navigator.vibrate(30); // Shorter vibration for swap
+    });
+  }
 }
 
 async function loadCurrencies() {

@@ -225,10 +225,40 @@ function setTheme(theme) {
     themeToggle.title = 'Switch to dark mode';
   }
   
-  // Update meta theme-color for mobile browsers
+  // Update meta theme-color for mobile browsers and PWA
   const metaThemeColor = document.querySelector('meta[name="theme-color"]');
   if (metaThemeColor) {
     metaThemeColor.setAttribute('content', theme === 'dark' ? '#1e293b' : '#2563eb');
+  }
+  
+  // Update favicon color scheme for dark mode (if supported)
+  updateFaviconForTheme(theme);
+}
+
+function updateFaviconForTheme(theme) {
+  // Create dynamic favicon that matches the theme
+  const isDark = theme === 'dark';
+  const bgColor = isDark ? '%231e293b' : '%232563eb';
+  const secondaryColor = isDark ? '%233b82f6' : '%231d4ed8';
+  
+  const faviconSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+    <defs>
+      <linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'>
+        <stop offset='0%' style='stop-color:${bgColor};stop-opacity:1' />
+        <stop offset='100%' style='stop-color:${secondaryColor};stop-opacity:1' />
+      </linearGradient>
+    </defs>
+    <circle cx='50' cy='50' r='45' fill='url(#grad)' stroke='%23ffffff' stroke-width='2'/>
+    <text x='50' y='35' font-family='Arial,sans-serif' font-size='20' font-weight='bold' text-anchor='middle' fill='%23ffffff'>$</text>
+    <text x='35' y='55' font-family='Arial,sans-serif' font-size='12' font-weight='bold' text-anchor='middle' fill='%23ffffff'>⇄</text>
+    <text x='65' y='55' font-family='Arial,sans-serif' font-size='16' font-weight='bold' text-anchor='middle' fill='%23ffffff'>€</text>
+    <text x='50' y='75' font-family='Arial,sans-serif' font-size='8' font-weight='normal' text-anchor='middle' fill='%23ffffff'>EXCHANGE</text>
+  </svg>`;
+  
+  // Update favicon
+  const favicon = document.querySelector('link[rel="icon"]');
+  if (favicon) {
+    favicon.href = `data:image/svg+xml,${faviconSvg}`;
   }
 }
 
